@@ -1,23 +1,19 @@
+{{-- <style>
+
+</style> --}}
+
 <tr align="center">
-    <th><input type="checkbox" id="master"></th>
-    <th>User Photo</th>
-    <th>User sign Photo</th>
-    <th>Firstname</th>
-    <th>lastname</th>
-    <th>phone</th>
-    <th>email</th>
-    <th>address</th>
-    <th>Age</th>
-    <th>ssc year</th>
-    <th>ssc_marks</th>
-    <th>hsc year</th>
-    <th>hsc marks</th>
-    <th>bachelor year</th>
-    <th>bachelor CGPA</th>
-    <th>master year</th>
-    <th>master CGPA</th>
-    <th>Status</th>
-    <th>Action</th>
+    <th style="text-align: center;"><input type="checkbox" id="master" oninput="checkall()"></th>
+    <th style="text-align: center;">User Photo</th>
+    <th style="text-align: center;">User sign Photo </th>
+    <th style="text-align: center;">@sortablelink('Firstname')</th>
+    <th style="text-align: center;">@sortablelink('lastname')</th>
+    <th style="text-align: center;">@sortablelink('phone')</th>
+    <th style="text-align: center;">@sortablelink('email')</th>
+    <th style="text-align: center;">@sortablelink('address')</th>
+    <th style="text-align: center;">@sortablelink('Age')</th>
+    <th style="text-align: center;">Status</th>
+    <th style="text-align: center;">Action</th>
 </tr>
 @foreach ($users as $user)
     <tr align="center">
@@ -32,10 +28,9 @@
         <td>{{ $user->email }}</td>
         <td>{{ $user->address }}</td>
         <td>
-            <div id="agefield{{ $user->id }}">
-                <label>{{ $user->age }}</label>
-                <select name="age" class="form-control show-data" placeholder="age"
-                    id="functionedit{{ $user->id }}" style="display: none;">
+            <div id="agefield{{$user->id}}">
+                <label>{{$user->age}}</label>
+                <select name="age" class="form-control show-data" placeholder="age"  id="functionedit{{ $user->id }}" style="display: none;">
                     <option name="age" value="25">25</option>
                     <option name="age" value="35">35</option>
                     <option name="age" value="45">45</option>
@@ -49,14 +44,6 @@
                     id="save_age">save</button>
             </div>
         </td>
-        <td>{{$user->ssc_year }}</td>
-        <td>{{$user->ssc_marks }}</td>
-        <td>{{$user->hsc_year }}</td>
-        <td>{{$user->hsc_marks }}</td>
-        <td>{{$user->bachelor_year }}</td>
-        <td>{{$user->bachelor_CGPA }}</td>
-        <td>{{$user->master_year }}</td>
-        <td>{{$user->master_CGPA }}</td>
         <td>
             <div id="statuscheck{{ $user->id }}">
                 <div onclick="change({{ $user->id }})">

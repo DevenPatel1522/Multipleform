@@ -10,6 +10,9 @@
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <title> </title>
     <style>
         .note {
@@ -104,7 +107,6 @@
         .adduser {
             margin-left: 290px;
         }
-
 
 
 
@@ -284,6 +286,20 @@
                 width: 100%;
             }
         }
+
+        .table {
+            text-align: center;
+        }
+
+        a {
+            color: black;
+
+        }
+
+        a:hover {
+            color: black;
+
+        }
     </style>
 </head>
 
@@ -302,7 +318,7 @@
                 </td>
                 <td width="1200px;" align="center">
                     <button class="btn btn-primary adduser" style="margin-top:15px;  width:120px;  height:60px;">
-                        <a href="{{ route('profile.get') }}">Add</a>
+                        <a href="{{ route('profile.get') }}" style="color: white;">Add</a>
                     </button>
                 </td>
                 <td width="250px;">
@@ -322,6 +338,7 @@
                 </td>
             </tr>
         </table>
+
     </div>
     <div class="register-form">
         <div class="form mt-5">
@@ -329,9 +346,11 @@
                 <h1> List Page </h1>
             </div>
             <div class="table">
-                <table border="3" id="categoryTable">
+                <table align="center" border="3" width="1918px;" id="categoryTable">
                     @include('table')
                 </table>
+                {!! $users->appends(\Request::except('page'))->render() !!}
+
             </div>
         </div>
     </div>
@@ -399,7 +418,9 @@
                     },
                     success: function(data) {
                         $('#categoryTable').html(data.html)
-                        $("#statuscheck" + id).load(window.location + " #statuscheck" + id);
+                        // $("#statuscheck" + id).load(window.location + " #statuscheck" + id);
+                        $("#categoryTable").load(window.location +
+                            " #categoryTable");
                     }
                 });
                 swal("Poof! Your User Status Change Successfully!", {
@@ -450,11 +471,16 @@
 
     function checkstatus() {
 
+        var selected_drobox_value = $('#selectaction :selected').val();
+
+
         $.ajax({
             url: '{{ route('activeuser') }}',
             method: 'get',
             data: {
-                "status": $('#selectaction').val()
+                // "status": $('#selectaction').val()
+                selected_drobox_value: selected_drobox_value,
+
             },
             success: function(data) {
                 $('#categoryTable').html(data.html)
@@ -506,13 +532,16 @@
         // });
     }
 
-    $('#master').on('click', function(e) {
-        if ($(this).is(':checked', true)) {
+    // $('#master').on('click', function(e) {
+    function checkall() {
+
+        if ($('#master').is(':checked', true)) {
             $(".sub_chk").prop('checked', true);
         } else {
             $(".sub_chk").prop('checked', false);
         }
-    });
+    }
+    // }); 
 
 
     $('.active-all').on('click', function() {

@@ -142,9 +142,9 @@
             border-color: green;
         }
 
-        .progressbar li.active+li:after {
+        /* .progressbar li.active+li:after {
             background-color: green;
-        }
+        } */
 
         .progressbar {
             text-align: center;
@@ -155,7 +155,7 @@
     <div class="container">
         <ul class="progressbar">
             <li class="active">Step 1</li>
-            <li >Step 2</li>
+            <li>Step 2</li>
             <li>Step 3</li>
             <li>Complete</li>
         </ul>
@@ -215,8 +215,6 @@
 
                     <input type="hidden" class="form-control" name="token" placeholder="token" value="@if(isset($user)){{ $user->token }}@endif" >
 
-                    
-
                     <div class="row justify-content-start mt-5">
                         <div class="col">
                             <button type="submit" class="btnSubmit"> Next </button>
@@ -234,23 +232,23 @@
     $(document).ready(function() {
         $('#jqueryvalidation').validate({
             rules: {
-                firstname: {
+                firstname:{
                     required: true,
                 },
-                phone: {
+                phone:{
                     required: true,
                 },
-                lastname: {
+                lastname:{
                     required: true,
                 },
-                birthdate: {
+                birthdate:{
                     required: true,
                 },
-                email: {
+                email:{
                     required: true,
                     email: true,
                 },
-                address: {
+                address:{
                     required: true,
                 },
                 age:{
@@ -261,5 +259,4 @@
         });
     });
 </script>
-
 </html>

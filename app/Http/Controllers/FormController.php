@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use extension;
+use Log;
 /*****************************Profile Page ***************************/
 class FormController extends Controller
 {
@@ -56,6 +57,7 @@ class FormController extends Controller
         }
         else {
             try {
+                \Log::info('Profile Data save in Database');
                 $checkEmail = Profile::where('email', '=', $request->email)->where('token', '!=', $request->token)->exists();
                 if ($checkEmail) {
                     $arr['data'] = array('email' => $request->email);
@@ -132,6 +134,7 @@ class FormController extends Controller
     {
        
         try {
+            \Log::info('Image Page Step Save in Profile Table');
             $data = Profile::where('id', '=', $request->profile_id)->first();
             if ($data) {
               
@@ -212,6 +215,7 @@ class FormController extends Controller
             $arr = array("status" => 400, "message" => $validator->errors()->first(), "data" => array());
         }
         else {
+            \Log::info('Education Page Data Save In Database.');
             try {
                 $education = Profile::where('id', '=', $request->id)->first();
                 $educationupdate = Profile::where('id', '=', $request->editid)->first();
@@ -276,14 +280,19 @@ class FormController extends Controller
     }
     /*********************table listing page ******************/
     public function list()
+    
     {
-        $users = Profile::with('image')->get();
+        $users = Profile::sortable()->paginate(5);
+
+        // $users = Profile::with('image')->get();
         return view('list', compact('users'));
     }
     /**********************Edit Button Code*******************/
     public function edit($id)
     {
         try {
+            \Log::info('check a step and display a step page.');
+
             $edit = Profile::where('id', '=', $id)->first();
             if ($edit->step == 1) {
                 return \Redirect::route('image', $id);
@@ -318,6 +327,8 @@ class FormController extends Controller
     public function changeStatus(Request $request)
     {
         try {
+            \Log::info('Active button and Inactive button Code .');
+
             $users_status = Profile::find($request->get('id'));
             if ($users_status->status == 0) {
                 $users_status->status = 1;
@@ -362,6 +373,8 @@ class FormController extends Controller
     public function search(Request $request)
     {
         try {
+            \Log::info('Search a data and Display a search Data.');
+
             $search = $request->input('search_value');
             if ($request->get('selected_drobox_value') == 1) {
                     
@@ -452,7 +465,15 @@ class FormController extends Controller
     /****************** Data get using Dropdown**********************/
     public function activeuser(Request $request)
     {
-        $users = Profile::where('status', $request->status)->get();
+        if($request->get('selected_drobox_value') == 1){
+            $users = Profile::sortable()->whereStatus(1)->paginate(5);
+        }elseif($request->get('selected_drobox_value') == 'status'){
+            $users = Profile::sortable()->with('image')->paginate(5);
+        }elseif($request->get('selected_drobox_value') == 0){
+            $users = Profile::sortable()->whereStatus(0)->paginate(5);
+        }
+
+        // $users = Profile::where('status', $request->status)->get();
         $returnHTML = view('table')->with('users', $users)->render();
         return response()->json(array('success' => 200, 'html' => $returnHTML));
     }
@@ -542,3 +563,18 @@ class FormController extends Controller
         return response()->json(['success' => 'Crop Image Uploaded Successfully']);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

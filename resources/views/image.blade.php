@@ -220,13 +220,10 @@
             </div>
 
 
-
-
-
             <form action="{{ route('image.post') }}" method="POST" enctype="multipart/form-data"
                 id="jqueryvalidation">
                 @csrf
-                <input type="text" class="form-control" name="profile_id" id="profile_id"
+                <input type="hidden" class="form-control" name="profile_id" id="profile_id"
                     value="{{ $lastid }}">
                 <div class="form-content">
                     {{-- <div class="row align-items-center mt-5">
