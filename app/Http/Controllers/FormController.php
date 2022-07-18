@@ -577,20 +577,13 @@ class FormController extends Controller
         $listing = $request->get('changepagination');
         
         if ($request->get('selected_drobox_value') == 1) {
-            
             $users = Profile::sortable()->whereStatus(1)->paginate($listing);
-            echo "<pre>";
-            print_r($users);
         }
         elseif ($request->get('selected_drobox_value') == 'status') {
             $users = Profile::sortable()->with('image')->paginate($listing);
-            echo "<pre>";
-            print_r($users);
         }
         elseif ($request->get('selected_drobox_value') == 0) {
             $users = Profile::sortable()->whereStatus(0)->paginate($listing);
-            echo "<pre>";
-            print_r($users);
         }
 
         $returnHTML = view('table')->with('users', $users)->render();
