@@ -125,9 +125,7 @@ class FormController extends Controller
         }
         else {
             return view('image', compact('last', 'lastid'));
-
         }
-
     }
 
     public function imagepost(Request $request)
@@ -284,7 +282,6 @@ class FormController extends Controller
 
         $listing = $request->get('changepagination');
 
-        
         if($listing){
             $users = Profile::sortable()->paginate($listing);
         }
@@ -347,18 +344,12 @@ class FormController extends Controller
             }
             if ($request->get('selected_drobox_value') == 1) {
                 $users = Profile::sortable()->whereStatus(1)->with('image')->paginate(5);
-                // echo "<pre>";
-                // print_r($users);
             }
             elseif ($request->get('selected_drobox_value') == 'status') {
                 $users = Profile::sortable()->paginate(5);
-                // echo "<pre>";
-                // print_r($users);
             }
             elseif ($request->get('selected_drobox_value') == 0) {
                 $users = Profile::sortable()->whereStatus(0)->with('image')->paginate(5);
-                // echo "<pre>";
-                // print_r($users);
             }
             $returnHTML = view('table')->with('users', $users)->render();
             return response()->json(array('success' => 200, 'html' => $returnHTML));
@@ -488,8 +479,6 @@ class FormController extends Controller
         elseif ($request->get('selected_drobox_value') == 0) {
             $users = Profile::sortable()->whereStatus(0)->paginate(5);
         }
-
-        // $users = Profile::where('status', $request->status)->get();
         $returnHTML = view('table')->with('users', $users)->render();
         return response()->json(array('success' => 200, 'html' => $returnHTML));
     }
@@ -588,13 +577,20 @@ class FormController extends Controller
         $listing = $request->get('changepagination');
         
         if ($request->get('selected_drobox_value') == 1) {
+            
             $users = Profile::sortable()->whereStatus(1)->paginate($listing);
+            echo "<pre>";
+            print_r($users);
         }
         elseif ($request->get('selected_drobox_value') == 'status') {
             $users = Profile::sortable()->with('image')->paginate($listing);
+            echo "<pre>";
+            print_r($users);
         }
         elseif ($request->get('selected_drobox_value') == 0) {
             $users = Profile::sortable()->whereStatus(0)->paginate($listing);
+            echo "<pre>";
+            print_r($users);
         }
 
         $returnHTML = view('table')->with('users', $users)->render();
