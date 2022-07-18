@@ -81,6 +81,8 @@ Route::post('userimage-cropper/upload',[FormController::class,'upload'])->name('
 
 Route::post('usersignupload',[FormController::class,'usersignupload'])->name('usersignupload');
 
+Route::get('changepagination',[FormController::class,'changepagination'])->name('changepagination');
+
 
 
 

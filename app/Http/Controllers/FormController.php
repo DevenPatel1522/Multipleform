@@ -132,12 +132,12 @@ class FormController extends Controller
 
     public function imagepost(Request $request)
     {
-       
+
         try {
             \Log::info('Image Page Step Save in Profile Table');
             $data = Profile::where('id', '=', $request->profile_id)->first();
             if ($data) {
-              
+
                 $id = $request->profile_id;
                 $data->step = 2;
                 $data->save();
@@ -167,26 +167,26 @@ class FormController extends Controller
     // $usersign = time() . rand() . '.' . $request->usersign->extension();
     // $request->usersign->move(public_path('sign'), $usersign);
     // $image->usersign = $usersign;
-      // if ($request->hasFile('userimage')) {
-                //     $userimage = public_path() . '/image';
-                //     $file = $request->userimage;
-                //     $imageuser = time() . rand() . '.' . $file->extension();
-                //     $file->move($userimage, $imageuser);
-                //     $image['userimage'] = $imageuser;
-                // }
-                // if ($request->hasFile('usersign')) {
-                //     $userimage = public_path() . '/sign';
-                //     $file = $request->usersign;
-                //     $signuser = time() . rand() . '.' . $file->extension();
-                //     $file->move($userimage, $signuser);
-                //     $image['usersign'] = $signuser;
-                // }    
+    // if ($request->hasFile('userimage')) {
+    //     $userimage = public_path() . '/image';
+    //     $file = $request->userimage;
+    //     $imageuser = time() . rand() . '.' . $file->extension();
+    //     $file->move($userimage, $imageuser);
+    //     $image['userimage'] = $imageuser;
+    // }
+    // if ($request->hasFile('usersign')) {
+    //     $userimage = public_path() . '/sign';
+    //     $file = $request->usersign;
+    //     $signuser = time() . rand() . '.' . $file->extension();
+    //     $file->move($userimage, $signuser);
+    //     $image['usersign'] = $signuser;
+    // }    
 
-                // $image = new image();
-                // $image->profile_id = $request->profile_id;
-                // $image->userimage = $imageuser;
-                // $image->usersign = $signuser;
-                // $image->save();
+    // $image = new image();
+    // $image->profile_id = $request->profile_id;
+    // $image->userimage = $imageuser;
+    // $image->usersign = $signuser;
+    // $image->save();
     }
 
     /************************** education page code*********************/
@@ -279,13 +279,18 @@ class FormController extends Controller
         return view('last', compact('photos', 'images'));
     }
     /*********************table listing page ******************/
-    public function list()
-    
+    public function list(Request $request)
     {
-        
-        $users = Profile::sortable()->paginate(5);
 
-        // $users = Profile::with('image')->get();
+        $listing = $request->get('changepagination');
+
+        
+        if($listing){
+            $users = Profile::sortable()->paginate($listing);
+        }
+        $users = Profile::sortable()->paginate($listing);
+
+
         return view('list', compact('users'));
     }
     /**********************Edit Button Code*******************/
@@ -323,11 +328,12 @@ class FormController extends Controller
         Profile::whereid($request->get('id'))->delete();
         image::whereProfileId($request->get('id'))->delete();
     }
-    
+
     /******************Change Status Code*******************/
     public function changeStatus(Request $request)
     {
         try {
+
             \Log::info('Active button and Inactive button Code .');
 
             $users_status = Profile::find($request->get('id'));
@@ -340,13 +346,19 @@ class FormController extends Controller
                 $users_status->save();
             }
             if ($request->get('selected_drobox_value') == 1) {
-                $users = Profile::whereStatus(1)->with('image')->get();
+                $users = Profile::sortable()->whereStatus(1)->with('image')->paginate(5);
+                // echo "<pre>";
+                // print_r($users);
             }
-            elseif($request->get('selected_drobox_value')=='status') {
-                $users = Profile::with('image')->get();
+            elseif ($request->get('selected_drobox_value') == 'status') {
+                $users = Profile::sortable()->paginate(5);
+                // echo "<pre>";
+                // print_r($users);
             }
-            elseif($request->get('selected_drobox_value') == 0) {
-                $users = Profile::whereStatus(0)->with('image')->get();
+            elseif ($request->get('selected_drobox_value') == 0) {
+                $users = Profile::sortable()->whereStatus(0)->with('image')->paginate(5);
+                // echo "<pre>";
+                // print_r($users);
             }
             $returnHTML = view('table')->with('users', $users)->render();
             return response()->json(array('success' => 200, 'html' => $returnHTML));
@@ -360,6 +372,7 @@ class FormController extends Controller
             }
             $arr = array("status" => 400, "message" => $msg, "data" => $msg);
         }
+
     }
     /****************Edit age in listing Page *******************/
     public function editage(Request $request)
@@ -378,12 +391,12 @@ class FormController extends Controller
 
             $search = $request->input('search_value');
             if ($request->get('selected_drobox_value') == 1) {
-                    
+
                 if ($search == '') {
-                    $users = Profile::whereStatus(1)->get();
+                    $users = Profile::sortable()->whereStatus(1)->paginate(5);
                 }
                 else {
-                    $users = Profile::
+                    $users = Profile::sortable()->
                         whereStatus(1)->where('firstname', 'LIKE', "%{$search}%")
                         ->whereStatus(1)->orWhere('lastname', 'LIKE', "%{$search}%")
                         ->whereStatus(1)->orWhere('phone', 'LIKE', "%{$search}%")
@@ -399,15 +412,15 @@ class FormController extends Controller
                         ->whereStatus(1)->orWhere('bachelor_CGPA', 'LIKE', "%{$search}%")
                         ->whereStatus(1)->orWhere('master_year', 'LIKE', "%{$search}%")
                         ->whereStatus(1)->orWhere('master_CGPA', 'LIKE', "%{$search}%")
-                        ->get();
+                        ->paginate(5);
                 }
             }
-            elseif($request->get('selected_drobox_value') == 'status') {
+            elseif ($request->get('selected_drobox_value') == 'status') {
                 if ($search == '') {
-                    $users = Profile::with('image')->get();
+                    $users = Profile::sortable()->with('image')->paginate(5);
                 }
                 else {
-                    $users = Profile::where('firstname', 'LIKE', "%{$search}%")
+                    $users = Profile::sortable()->where('firstname', 'LIKE', "%{$search}%")
                         ->orWhere('lastname', 'LIKE', "%{$search}%")
                         ->orWhere('phone', 'LIKE', "%{$search}%")
                         ->orWhere('birthdate', 'LIKE', "%{$search}%")
@@ -422,15 +435,15 @@ class FormController extends Controller
                         ->orWhere('bachelor_CGPA', 'LIKE', "%{$search}%")
                         ->orWhere('master_year', 'LIKE', "%{$search}%")
                         ->orWhere('master_CGPA', 'LIKE', "%{$search}%")
-                        ->get();
+                        ->paginate(5);
                 }
             }
-            elseif($request->get('selected_drobox_value') == 0) {
+            elseif ($request->get('selected_drobox_value') == 0) {
                 if ($search == '') {
-                    $users = Profile::whereStatus(0)->get();
+                    $users = Profile::sortable()->whereStatus(0)->paginate(5);
                 }
                 else {
-                    $users = Profile::
+                    $users = Profile::sortable()->
                         whereStatus(0)->where('firstname', 'LIKE', "%{$search}%")
                         ->whereStatus(0)->orWhere('lastname', 'LIKE', "%{$search}%")
                         ->whereStatus(0)->orWhere('phone', 'LIKE', "%{$search}%")
@@ -446,7 +459,7 @@ class FormController extends Controller
                         ->whereStatus(0)->orWhere('bachelor_CGPA', 'LIKE', "%{$search}%")
                         ->whereStatus(0)->orWhere('master_year', 'LIKE', "%{$search}%")
                         ->whereStatus(0)->orWhere('master_CGPA', 'LIKE', "%{$search}%")
-                        ->get();
+                        ->paginate(5);
                 }
             }
             $returnHTML = view('table')->with('users', $users)->render();
@@ -466,11 +479,13 @@ class FormController extends Controller
     /****************** Data get using Status Dropdown**********************/
     public function activeuser(Request $request)
     {
-        if($request->get('selected_drobox_value') == 1){
+        if ($request->get('selected_drobox_value') == 1) {
             $users = Profile::sortable()->whereStatus(1)->paginate(5);
-        }elseif($request->get('selected_drobox_value') == 'status'){
+        }
+        elseif ($request->get('selected_drobox_value') == 'status') {
             $users = Profile::sortable()->with('image')->paginate(5);
-        }elseif($request->get('selected_drobox_value') == 0){
+        }
+        elseif ($request->get('selected_drobox_value') == 0) {
             $users = Profile::sortable()->whereStatus(0)->paginate(5);
         }
 
@@ -509,7 +524,7 @@ class FormController extends Controller
         }
     }
 
-
+/***************************** upload user image ***********************************/
     public function upload(Request $request)
     {
         $folderPath = public_path('image/');
@@ -537,6 +552,7 @@ class FormController extends Controller
     }
 
 
+    /**********************************upload user sign image***************************/
     public function usersignupload(Request $request)
     {
 
@@ -563,19 +579,25 @@ class FormController extends Controller
         }
         return response()->json(['success' => 'Crop Image Uploaded Successfully']);
     }
+
+
+/****************************** Add a pagination dropdown *********************/
+    public function changepagination(Request $request)
+    {
+        
+        $listing = $request->get('changepagination');
+        
+        if ($request->get('selected_drobox_value') == 1) {
+            $users = Profile::sortable()->whereStatus(1)->paginate($listing);
+        }
+        elseif ($request->get('selected_drobox_value') == 'status') {
+            $users = Profile::sortable()->with('image')->paginate($listing);
+        }
+        elseif ($request->get('selected_drobox_value') == 0) {
+            $users = Profile::sortable()->whereStatus(0)->paginate($listing);
+        }
+
+        $returnHTML = view('table')->with('users', $users)->render();
+        return response()->json(array('success' => 200, 'html' => $returnHTML));
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
