@@ -367,6 +367,7 @@
 
 </body>
 <script>
+    /********************** Delete Function ***********************/
     function deletefun(id) {
         swal({
             title: "Delete Data",
@@ -397,6 +398,7 @@
         });
     }
 
+    /******************* Change User Status*********************/
     function change(id) {
 
         var selected_drobox_value = $('#selectaction :selected').val();
@@ -433,7 +435,7 @@
     }
 
 
-
+/****************** Open a Age Dropdown Function ****************/
     function editfun(element) {
 
         var parent = $(element).parent().parent();
@@ -445,7 +447,7 @@
         $(button).show();
 
     }
-
+/**************** Age Save function *******************/
     function savefun(element, id) {
         var parent = $(element).parent().parent();
         var age_value = $('#functionedit' + id + ' option:selected').text();
@@ -469,11 +471,9 @@
         });
     }
 
+    /***************************Status Dropdown function**********************/
     function checkstatus() {
-
         var selected_drobox_value = $('#selectaction :selected').val();
-
-
         $.ajax({
             url: '{{ route('activeuser') }}',
             method: 'get',
@@ -490,7 +490,7 @@
     }
 
 
-
+/********************* Search Data ************************/
     function search_data() {
 
         var selected_drobox_value = $('#selectaction :selected').val();
@@ -510,6 +510,7 @@
 
     }
 
+    /********************On click Page Reset ******************/
     function pagereload() {
         $("#categoryTable").load(window.location + " #categoryTable");
         $('input[type="text"]').val('');
@@ -532,7 +533,7 @@
         // });
     }
 
-    // $('#master').on('click', function(e) {
+    /********************select a multiple checkbox ************************/
     function checkall() {
 
         if ($('#master').is(':checked', true)) {
@@ -541,9 +542,8 @@
             $(".sub_chk").prop('checked', false);
         }
     }
-    // }); 
 
-
+    /*********************Active all user ***************************/
     $('.active-all').on('click', function() {
         var idsArr = [];
         $(".sub_chk:checked").each(function() {
@@ -565,7 +565,7 @@
                 if (willDelete) {
                     var strIds = idsArr.join(",");
                     $.ajax({
-                        url: "{{ route('allactive') }}",
+                        url: '{{ route('allactive') }}',
                         type: 'post',
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -600,7 +600,7 @@
     });
 
 
-
+/***********************Inactive All User************************/
     $('.inactive-all').on('click', function() {
         var idsArr = [];
         $(".sub_chk:checked").each(function() {
@@ -623,7 +623,7 @@
                     var strIds = idsArr.join(",");
 
                     $.ajax({
-                        url: "{{ route('allinactive') }}",
+                        url: '{{ route('allinactive') }}',
                         type: 'post',
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -654,6 +654,7 @@
         }
     });
 
+    /********************Open a Image in popup**********************/
     var modal = document.getElementById('myModal');
     var images = document.getElementsByClassName('myImages');
     var modalImg = document.getElementById("img01");

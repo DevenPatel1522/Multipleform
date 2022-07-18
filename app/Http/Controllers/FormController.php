@@ -282,6 +282,7 @@ class FormController extends Controller
     public function list()
     
     {
+        
         $users = Profile::sortable()->paginate(5);
 
         // $users = Profile::with('image')->get();
@@ -462,7 +463,7 @@ class FormController extends Controller
         }
     }
 
-    /****************** Data get using Dropdown**********************/
+    /****************** Data get using Status Dropdown**********************/
     public function activeuser(Request $request)
     {
         if($request->get('selected_drobox_value') == 1){
