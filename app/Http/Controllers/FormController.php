@@ -32,6 +32,8 @@ class FormController extends Controller
             }
             $arr = array("status" => 400, "message" => $msg, "data" => $msg);
         }
+        return response()->json($arr);
+
     }
 
     public function profilege()
@@ -205,8 +207,6 @@ class FormController extends Controller
             'hsc_marks' => 'required',
             'bachelor_CGPA' => 'required',
             'bachelor_year' => 'required',
-            'master_year' => 'required',
-            'master_CGPA' => 'required',
         );
         $validator = Validator::make($input, $rules);
         if ($validator->fails()) {
@@ -280,12 +280,12 @@ class FormController extends Controller
     public function list(Request $request)
     {
 
-        $listing = $request->get('changepagination');
+       /*  $listing = $request->get('changepagination');
 
         if($listing){
             $users = Profile::sortable()->paginate($listing);
-        }
-        $users = Profile::sortable()->paginate($listing);
+        } */
+        $users = Profile::sortable()->paginate(5);
 
 
         return view('list', compact('users'));
@@ -316,6 +316,8 @@ class FormController extends Controller
             }
             $arr = array("status" => 400, "message" => $msg, "data" => $msg);
         }
+        return response()->json($arr);
+
 
     }
     /*******************Destory Button Code*****************/
@@ -363,6 +365,7 @@ class FormController extends Controller
             }
             $arr = array("status" => 400, "message" => $msg, "data" => $msg);
         }
+        return response()->json($arr);
 
     }
     /****************Edit age in listing Page *******************/
@@ -465,6 +468,8 @@ class FormController extends Controller
             }
             $arr = array("status" => 400, "message" => $msg, "data" => $msg);
         }
+        return response()->json($arr);
+
     }
 
     /****************** Data get using Status Dropdown**********************/
@@ -585,7 +590,6 @@ class FormController extends Controller
         elseif ($request->get('selected_drobox_value') == 0) {
             $users = Profile::sortable()->whereStatus(0)->paginate($listing);
         }
-
         $returnHTML = view('table')->with('users', $users)->render();
         return response()->json(array('success' => 200, 'html' => $returnHTML));
     }

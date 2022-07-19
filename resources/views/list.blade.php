@@ -227,7 +227,6 @@
                 </td>
                
                 <td width="950px;" align="center">
-                    
                     <button class="btn btn-primary adduser" style="margin-top:15px;  width:120px;  height:60px;">
                         <a href="{{ route('profile.get') }}" style="color: white;">Add</a>
                     </button>
@@ -265,17 +264,11 @@
             </div>
         </div>
     </div>
-    {{-- <div id="myModal" class="modal">
-        <span class="close" onclick="document.getElementById('myModal').style.display='none'">&times;</span>
-        <img class="modal-content" id="img01">
-        <div id="caption"></div>
-    </div> --}}
     <div id="myModal" class="modal">
         <span class="close">&times;</span>
         <img class="modal-content" id="img01">
         <div id="caption"></div>
     </div>
-
 </body>
 <script>
     /********************** Delete Function ***********************/
@@ -350,15 +343,11 @@
 
 
 
-
-    /**********************Pagination Dropdown function*****************/
+/**********************Pagination Dropdown function*****************/
 
 function changepagination(){
     var changepagination = $('#changepagination :selected').val();
     var selected_drobox_value = $('#selectaction :selected').val();
-
-
-    // alert(changepagination);
     $.ajax({
             url: '{{ route('changepagination') }}',
             method: 'get',
@@ -370,19 +359,19 @@ function changepagination(){
                 $('#categoryTable').html(data.html)
             }
         });
+        
+        // $.ajax({
+        //     url:'{{route('list')}}',
+        //     method:'get',
+        //     data:{
+        //         changepagination: changepagination,
+        //         selected_drobox_value:selected_drobox_value,
+        //     },
+        //     success: function(data) {
+        //         $('#categoryTable').html(data.html)
+        //     }
 
-        $.ajax({
-            url:'{{route('list')}}',
-            method:'get',
-            data:{
-                changepagination: changepagination,
-                selected_drobox_value:selected_drobox_value,
-            },
-            success: function(data) {
-                $('#categoryTable').html(data.html)
-            }
-
-        });
+        // });
 }
 
 
