@@ -255,10 +255,10 @@
                 <h1> List Page </h1>
             </div>
             <div class="table">
-                <table align="center" border="3" width="1918px;" id="categoryTable" >
+                <table align="center" border="3" width="1918px;" id="categoryTable">
                     @include('table')
                 </table>
-                {!! $users->appends(\Request::except('page'))->render() /* /url::current() */ !!}
+                {!! $users->appends(\Request::except('page'))->render() !!}
 
             </div>
         </div>
@@ -358,18 +358,18 @@
             }
         });
 
-       /*  $.ajax({
-            url: '{{ route('list') }}',
-            method: 'get',
-            data: {
-                changepagination: changepagination,
-                selected_drobox_value: selected_drobox_value,
-            },
-            success: function(data) {
-                $('#categoryTable').html(data.html)
-            }
+        /*  $.ajax({
+             url: '{{ route('list') }}',
+             method: 'get',
+             data: {
+                 changepagination: changepagination,
+                 selected_drobox_value: selected_drobox_value,
+             },
+             success: function(data) {
+                 $('#categoryTable').html(data.html)
+             }
 
-        }); */
+         }); */
     }
 
 
@@ -420,7 +420,7 @@
             data: {
                 // "status": $('#selectaction').val()
                 selected_drobox_value: selected_drobox_value,
-                changepagination:changepagination,
+                changepagination: changepagination,
 
             },
             success: function(data) {
@@ -452,11 +452,11 @@
     }
 
     /********************On click Page Reset ******************/
-    
+
     function pagereload() {
         $("#categoryTable").load(window.location + " #categoryTable");
 
-        $('input[type="text"]').val(''); 
+        $('input[type="text"]').val('');
 
         // $('#changepagination').val('');
         // $('#selectaction').val('');
