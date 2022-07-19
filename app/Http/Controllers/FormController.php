@@ -16,8 +16,6 @@ class FormController extends Controller
 {
     public function profileget($id)
     {
-
-
         try {
             $lastid = $id;
             $user = Profile::find($lastid);
@@ -280,12 +278,12 @@ class FormController extends Controller
     public function list(Request $request)
     {
 
-       /*  $listing = $request->get('changepagination');
-
-        if($listing){
-            $users = Profile::sortable()->paginate($listing);
-        } */
-        $users = Profile::sortable()->paginate(5);
+        $listing = $request->get('changepagination');
+        // if($listing){
+        //     $users = Profile::sortable()->paginate($listing);
+        // }else{
+            $users = Profile::sortable()->paginate(5);
+        
 
 
         return view('list', compact('users'));
@@ -475,14 +473,17 @@ class FormController extends Controller
     /****************** Data get using Status Dropdown**********************/
     public function activeuser(Request $request)
     {
+        $link = $request->get('changepagination');
+        
+
         if ($request->get('selected_drobox_value') == 1) {
-            $users = Profile::sortable()->whereStatus(1)->paginate(5);
+            $users = Profile::sortable()->whereStatus(1)->paginate($link);
         }
         elseif ($request->get('selected_drobox_value') == 'status') {
-            $users = Profile::sortable()->with('image')->paginate(5);
+            $users = Profile::sortable()->with('image')->paginate($link);
         }
         elseif ($request->get('selected_drobox_value') == 0) {
-            $users = Profile::sortable()->whereStatus(0)->paginate(5);
+            $users = Profile::sortable()->whereStatus(0)->paginate($link);
         }
         $returnHTML = view('table')->with('users', $users)->render();
         return response()->json(array('success' => 200, 'html' => $returnHTML));
@@ -578,17 +579,15 @@ class FormController extends Controller
 /****************************** Add a pagination dropdown *********************/
     public function changepagination(Request $request)
     {
-        
         $listing = $request->get('changepagination');
-        
         if ($request->get('selected_drobox_value') == 1) {
-            $users = Profile::sortable()->whereStatus(1)->paginate($listing);
+            $users = Profile::whereStatus(1)->paginate($listing);
         }
         elseif ($request->get('selected_drobox_value') == 'status') {
-            $users = Profile::sortable()->with('image')->paginate($listing);
+            $users = Profile::with('image')->paginate($listing);
         }
         elseif ($request->get('selected_drobox_value') == 0) {
-            $users = Profile::sortable()->whereStatus(0)->paginate($listing);
+            $users = Profile::whereStatus(0)->paginate($listing);
         }
         $returnHTML = view('table')->with('users', $users)->render();
         return response()->json(array('success' => 200, 'html' => $returnHTML));

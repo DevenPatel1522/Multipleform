@@ -207,7 +207,7 @@
 
 <body>
     <div class="add">
-        <table align="center" >
+        <table align="center">
             <tr>
                 <td width="100px;">
                     <select class="form-control" name="status" id="changepagination" onclick="changepagination()">
@@ -219,13 +219,13 @@
                 <td width="180px;">
                     <div>
                         <select class="form-control" name="status" id="selectaction" onclick="checkstatus()">
-                            <option selected="true" name="all" value="status" >All</option>
+                            <option selected="true" name="all" value="status">All</option>
                             <option name="active" value="1">Active</option>
                             <option name="deactive" value="0">Deactive</option>
                         </select>
                     </div>
                 </td>
-               
+
                 <td width="950px;" align="center">
                     <button class="btn btn-primary adduser" style="margin-top:15px;  width:120px;  height:60px;">
                         <a href="{{ route('profile.get') }}" style="color: white;">Add</a>
@@ -238,7 +238,7 @@
                 <td width="170px;">
                     <button type="submit" class="btn btn-primary" id="search_bar"
                         onclick="search_data()">Search</button>
-                    <button type="submit" class="btn btn-primary" onclick="pagereload()">reset</button>
+                    <button type="submit" class="btn btn-primary" id="reset"onclick="pagereload()">reset</button>
                 </td>
                 <td width="80px;">
                     <button class="btn btn-success active-all">Active</button>
@@ -248,7 +248,6 @@
                 </td>
             </tr>
         </table>
-
     </div>
     <div class="register-form">
         <div class="form mt-5">
@@ -256,10 +255,10 @@
                 <h1> List Page </h1>
             </div>
             <div class="table">
-                <table align="center" border="3" width="1918px;" id="categoryTable">
+                <table align="center" border="3" width="1918px;" id="categoryTable" >
                     @include('table')
                 </table>
-                {!! $users->appends(\Request::except('page'))->render() !!}
+                {!! $users->appends(\Request::except('page'))->render() /* /url::current() */ !!}
 
             </div>
         </div>
@@ -306,6 +305,7 @@
     function change(id) {
 
         var selected_drobox_value = $('#selectaction :selected').val();
+
         swal({
             title: "Change User Status",
             text: "Are you sure you want to Change Status?",
@@ -324,9 +324,7 @@
                     },
                     success: function(data) {
                         $('#categoryTable').html(data.html)
-                        // $("#statuscheck" + id).load(window.location + " #statuscheck" + id);
-                        $("#categoryTable").load(window.location +
-                            " #categoryTable");
+                        $("#statuscheck" + id).load(window.location + " #statuscheck" + id);
                     }
                 });
                 swal("Poof! Your User Status Change Successfully!", {
@@ -338,44 +336,44 @@
         });
     }
 
-/**********************Create a Dynamic url********************/
+    /**********************Create a Dynamic url********************/
 
 
 
 
-/**********************Pagination Dropdown function*****************/
+    /**********************Pagination Dropdown function*****************/
 
-function changepagination(){
-    var changepagination = $('#changepagination :selected').val();
-    var selected_drobox_value = $('#selectaction :selected').val();
-    $.ajax({
+    function changepagination() {
+        var changepagination = $('#changepagination :selected').val();
+        var selected_drobox_value = $('#selectaction :selected').val();
+        $.ajax({
             url: '{{ route('changepagination') }}',
             method: 'get',
             data: {
                 changepagination: changepagination,
-                selected_drobox_value:selected_drobox_value,
+                selected_drobox_value: selected_drobox_value,
             },
             success: function(data) {
                 $('#categoryTable').html(data.html)
             }
         });
-        
-        // $.ajax({
-        //     url:'{{route('list')}}',
-        //     method:'get',
-        //     data:{
-        //         changepagination: changepagination,
-        //         selected_drobox_value:selected_drobox_value,
-        //     },
-        //     success: function(data) {
-        //         $('#categoryTable').html(data.html)
-        //     }
 
-        // });
-}
+       /*  $.ajax({
+            url: '{{ route('list') }}',
+            method: 'get',
+            data: {
+                changepagination: changepagination,
+                selected_drobox_value: selected_drobox_value,
+            },
+            success: function(data) {
+                $('#categoryTable').html(data.html)
+            }
+
+        }); */
+    }
 
 
-/****************** Open a Age Dropdown Function ****************/
+    /****************** Open a Age Dropdown Function ****************/
     function editfun(element) {
 
         var parent = $(element).parent().parent();
@@ -387,7 +385,7 @@ function changepagination(){
         $(button).show();
 
     }
-/**************** Age Save function *******************/
+    /**************** Age Save function *******************/
     function savefun(element, id) {
         var parent = $(element).parent().parent();
         var age_value = $('#functionedit' + id + ' option:selected').text();
@@ -414,12 +412,15 @@ function changepagination(){
     /***************************Status Dropdown function**********************/
     function checkstatus() {
         var selected_drobox_value = $('#selectaction :selected').val();
+        var changepagination = $('#changepagination :selected').val();
+
         $.ajax({
             url: '{{ route('activeuser') }}',
             method: 'get',
             data: {
                 // "status": $('#selectaction').val()
                 selected_drobox_value: selected_drobox_value,
+                changepagination:changepagination,
 
             },
             success: function(data) {
@@ -430,7 +431,7 @@ function changepagination(){
     }
 
 
-/********************* Search Data ************************/
+    /********************* Search Data ************************/
     function search_data() {
 
         var selected_drobox_value = $('#selectaction :selected').val();
@@ -451,9 +452,19 @@ function changepagination(){
     }
 
     /********************On click Page Reset ******************/
+    
     function pagereload() {
         $("#categoryTable").load(window.location + " #categoryTable");
-        $('input[type="text"]').val('');
+
+        $('input[type="text"]').val(''); 
+
+        // $('#changepagination').val('');
+        // $('#selectaction').val('');
+        // $("#changepagination").load(window.location + " #changepagination");
+        // $("#selectaction").load(window.location + "#selectaction");
+
+
+
         // $('#selectaction').val('');
         // $("#selectaction").load(window.location + " #selectaction");
 
@@ -540,7 +551,7 @@ function changepagination(){
     });
 
 
-/***********************Inactive All User************************/
+    /***********************Inactive All User************************/
     $('.inactive-all').on('click', function() {
         var idsArr = [];
         $(".sub_chk:checked").each(function() {
