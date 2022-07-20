@@ -255,11 +255,13 @@
                 <h1> List Page </h1>
             </div>
             <div class="table">
+                <div style="overflow-x:auto;">
+
                 <table align="center" border="3" width="1918px;" id="categoryTable">
                     @include('table')
                 </table>
-                {!! $users->appends(\Request::except('page'))->render() !!}
-
+                {!! $users->appends(\Request::except('page'))->render()  !!}
+                </div>
             </div>
         </div>
     </div>
@@ -305,6 +307,7 @@
     function change(id) {
 
         var selected_drobox_value = $('#selectaction :selected').val();
+        var changepagination = $('#changepagination :selected').val();
 
         swal({
             title: "Change User Status",
@@ -320,6 +323,7 @@
                     data: {
                         id: id,
                         selected_drobox_value: selected_drobox_value,
+                        changepagination:changepagination,
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(data) {
@@ -435,6 +439,8 @@
     function search_data() {
 
         var selected_drobox_value = $('#selectaction :selected').val();
+        var changepagination = $('#changepagination :selected').val();
+
         var search_value = $('#search_bar_value').val();
         $.ajax({
             url: '{{ route('search') }}',
@@ -442,6 +448,7 @@
             data: {
                 search_value: search_value,
                 selected_drobox_value: selected_drobox_value,
+                changepagination:changepagination,
                 _token: '{{ csrf_token() }}'
             },
             success: function(data) {

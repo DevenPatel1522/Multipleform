@@ -191,7 +191,11 @@ class FormController extends Controller
     public function education($id)
     {
         $profile_data = Profile::whereId($id)->first();
-        return view('education', compact('profile_data'));
+        if($profile_data){
+            return view('education', compact('profile_data'));
+        }else{
+            dd(400);
+        }
     }
 
     public function educationpost(Request $request)
@@ -199,12 +203,12 @@ class FormController extends Controller
 
         $input = $request->all();
         $rules = array(
-            'ssc_year' => 'required',
-            'ssc_marks' => 'required',
-            'hsc_year' => 'required',
-            'hsc_marks' => 'required',
-            'bachelor_CGPA' => 'required',
-            'bachelor_year' => 'required',
+            'ssc_year' => 'required|integer',
+            'ssc_marks' => 'required|integer',
+            'hsc_year' => 'required|integer',
+            'hsc_marks' => 'required|integer',
+            'bachelor_CGPA' => 'required|integer',
+            'bachelor_year' => 'required|integer',
         );
         $validator = Validator::make($input, $rules);
         if ($validator->fails()) {
@@ -265,7 +269,11 @@ class FormController extends Controller
     {
         $lastid = $id;
         $user = Profile::find($lastid);
-        return view('education', compact('user'));
+        if($user){
+            return view('education', compact('user'));
+        }else{
+            dd(400);
+        }
     }
     /************************** Last Page Code*******************/
     public function last($id)
@@ -277,15 +285,11 @@ class FormController extends Controller
     /*********************table listing page ******************/
     public function list(Request $request)
     {
-
-        $listing = $request->get('changepagination');
+        // $listing = $request->get('changepagination');
         // if($listing){
         //     $users = Profile::sortable()->paginate($listing);
-        // }else{
-            $users = Profile::sortable()->paginate(5);
-        
-
-
+        // }else{}
+        $users = Profile::sortable()->paginate(5);
         return view('list', compact('users'));
     }
     /**********************Edit Button Code*******************/
@@ -333,6 +337,8 @@ class FormController extends Controller
 
             \Log::info('Active button and Inactive button Code .');
 
+            $link = $request->get('changepagination');
+
             $users_status = Profile::find($request->get('id'));
             if ($users_status->status == 0) {
                 $users_status->status = 1;
@@ -343,13 +349,13 @@ class FormController extends Controller
                 $users_status->save();
             }
             if ($request->get('selected_drobox_value') == 1) {
-                $users = Profile::sortable()->whereStatus(1)->with('image')->paginate(5);
+                $users = Profile::sortable()->whereStatus(1)->with('image')->paginate($link);
             }
             elseif ($request->get('selected_drobox_value') == 'status') {
-                $users = Profile::sortable()->paginate(5);
+                $users = Profile::sortable()->paginate($link);
             }
             elseif ($request->get('selected_drobox_value') == 0) {
-                $users = Profile::sortable()->whereStatus(0)->with('image')->paginate(5);
+                $users = Profile::sortable()->whereStatus(0)->with('image')->paginate($link);
             }
             $returnHTML = view('table')->with('users', $users)->render();
             return response()->json(array('success' => 200, 'html' => $returnHTML));
@@ -379,13 +385,18 @@ class FormController extends Controller
     public function search(Request $request)
     {
         try {
+
+            
+
             \Log::info('Search a data and Display a search Data.');
 
+            $link = $request->get('changepagination');
             $search = $request->input('search_value');
+
             if ($request->get('selected_drobox_value') == 1) {
 
                 if ($search == '') {
-                    $users = Profile::sortable()->whereStatus(1)->paginate(5);
+                    $users = Profile::sortable()->whereStatus(1)->paginate($link);
                 }
                 else {
                     $users = Profile::sortable()->
@@ -404,12 +415,12 @@ class FormController extends Controller
                         ->whereStatus(1)->orWhere('bachelor_CGPA', 'LIKE', "%{$search}%")
                         ->whereStatus(1)->orWhere('master_year', 'LIKE', "%{$search}%")
                         ->whereStatus(1)->orWhere('master_CGPA', 'LIKE', "%{$search}%")
-                        ->paginate(5);
+                        ->paginate($link);
                 }
             }
             elseif ($request->get('selected_drobox_value') == 'status') {
                 if ($search == '') {
-                    $users = Profile::sortable()->with('image')->paginate(5);
+                    $users = Profile::sortable()->with('image')->paginate($link);
                 }
                 else {
                     $users = Profile::sortable()->where('firstname', 'LIKE', "%{$search}%")
@@ -427,12 +438,12 @@ class FormController extends Controller
                         ->orWhere('bachelor_CGPA', 'LIKE', "%{$search}%")
                         ->orWhere('master_year', 'LIKE', "%{$search}%")
                         ->orWhere('master_CGPA', 'LIKE', "%{$search}%")
-                        ->paginate(5);
+                        ->paginate($link);
                 }
             }
             elseif ($request->get('selected_drobox_value') == 0) {
                 if ($search == '') {
-                    $users = Profile::sortable()->whereStatus(0)->paginate(5);
+                    $users = Profile::sortable()->whereStatus(0)->paginate($link);
                 }
                 else {
                     $users = Profile::sortable()->
@@ -451,7 +462,7 @@ class FormController extends Controller
                         ->whereStatus(0)->orWhere('bachelor_CGPA', 'LIKE', "%{$search}%")
                         ->whereStatus(0)->orWhere('master_year', 'LIKE', "%{$search}%")
                         ->whereStatus(0)->orWhere('master_CGPA', 'LIKE', "%{$search}%")
-                        ->paginate(5);
+                        ->paginate($link);
                 }
             }
             $returnHTML = view('table')->with('users', $users)->render();
@@ -467,7 +478,6 @@ class FormController extends Controller
             $arr = array("status" => 400, "message" => $msg, "data" => $msg);
         }
         return response()->json($arr);
-
     }
 
     /****************** Data get using Status Dropdown**********************/
@@ -475,7 +485,6 @@ class FormController extends Controller
     {
         $link = $request->get('changepagination');
         
-
         if ($request->get('selected_drobox_value') == 1) {
             $users = Profile::sortable()->whereStatus(1)->paginate($link);
         }
@@ -592,4 +601,6 @@ class FormController extends Controller
         $returnHTML = view('table')->with('users', $users)->render();
         return response()->json(array('success' => 200, 'html' => $returnHTML));
     }
-}
+
+
+}   
